@@ -2,14 +2,12 @@ const express = require('express')
 const router = express.Router()
 const BookController = require('../controllers/BookController')
 const { requireAuth } = require('../middlewares/auth')
+const { Book, Category } = require('../models')
 
 // Semua rute di bawah ini wajib login.
 router.use(requireAuth)
 
-// Dashboard
 // di bagian atas routes/web.js:
-const { Book, Category } = require('../models')
-
 // ganti rute dashboard menjadi async + kirim jumlah data:
 router.get('/', async (req, res, next) => {
   try {
