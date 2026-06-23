@@ -1,12 +1,30 @@
 extends layouts/master
 
 block web-content
-  h1.h3.mb-3 Dashboard
-  p.text-muted Selamat datang di MiniPustaka — aplikasi manajemen buku sederhana untuk latihan.
-  .row.g-3
-    .col-md-4
-      .card
-        .card-body
-          h5.card-title Kelola Buku
-          p.card-text Tambah, ubah, dan hapus data buku beserta kategorinya.
-          a.btn.btn-primary(href="/books") Buka Daftar Buku
+  .row
+    .col-lg-6.col-12
+      .small-box.bg-info
+        .inner
+          h3= (typeof totalBuku !== 'undefined' ? totalBuku : '-')
+          p Total Buku
+        .icon
+          i.fas.fa-book
+        a.small-box-footer(href="/books")
+          | Lihat detail 
+          i.fas.fa-arrow-circle-right
+    .col-lg-6.col-12
+      .small-box.bg-success
+        .inner
+          h3= (typeof totalKategori !== 'undefined' ? totalKategori : '-')
+          p Total Kategori
+        .icon
+          i.fas.fa-tags
+        a.small-box-footer(href="/books")
+          | Kelola buku 
+          i.fas.fa-arrow-circle-right
+
+  .card
+    .card-header
+      h3.card-title Selamat Datang
+    .card-body
+      p.mb-0 Gunakan menu di samping kiri untuk mengelola data buku MiniPustaka.

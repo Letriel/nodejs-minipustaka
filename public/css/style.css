@@ -1,17 +1,13 @@
-body {
-    background-color: #f8f9fa;
+/* Penyesuaian kecil di atas tema AdminLTE */
+.brand-link .brand-text {
+  font-weight: 600;
+  letter-spacing: .3px;
 }
 
-.navbar-brand {
-    font-weight: 700;
-    letter-spacing: .5px;
+.login-logo b {
+  color: #007bff;
 }
 
-.card {
-    border: none;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
-}
-
-.table thead th {
-    white-space: nowrap;
+.content-header h1 {
+  font-size: 1.5rem;
 }

@@ -7,8 +7,20 @@ const { requireAuth } = require('../middlewares/auth')
 router.use(requireAuth)
 
 // Dashboard
-router.get('/', (req, res) => {
-    res.render('dashboard', { title: 'Dashboard' })
+// di bagian atas routes/web.js:
+const { Book, Category } = require('../models')
+
+// ganti rute dashboard menjadi async + kirim jumlah data:
+router.get('/', async (req, res, next) => {
+  try {
+    const [totalBuku, totalKategori] = await Promise.all([
+      Book.count(),
+      Category.count()
+    ])
+    res.render('dashboard', { title: 'Dashboard', totalBuku, totalKategori })
+  } catch (err) {
+    next(err)
+  }
 })
 
 // CRUD Buku

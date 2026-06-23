@@ -1,34 +1,40 @@
 extends ../layouts/master
 
 block web-content
-  .d-flex.justify-content-between.align-items-center.mb-3
-    h1.h3.mb-0 Daftar Buku
-    a.btn.btn-primary(href="/books/create") + Tambah Buku
-
-  if books.length === 0
-    .alert.alert-info Belum ada data buku. Silakan tambah buku baru.
-  else
-    .table-responsive
-      table.table.table-striped.table-bordered.bg-white.align-middle
-        thead.table-light
-          tr
-            th No
-            th Judul
-            th Penulis
-            th Tahun
-            th Kategori
-            th Stok
-            th(width="160") Aksi
-        tbody
-          each book, i in books
+  .card
+    .card-header
+      h3.card-title Daftar Buku
+      .card-tools
+        a.btn.btn-primary.btn-sm(href="/books/create")
+          i.fas.fa-plus.mr-1
+          | Tambah Buku
+    .card-body.p-0
+      if books.length === 0
+        .p-3
+          .alert.alert-info.mb-0 Belum ada data buku. Silakan tambah buku baru.
+      else
+        table.table.table-striped.table-hover.mb-0
+          thead
             tr
-              td= i + 1
-              td= book.title
-              td= book.author
-              td= book.year || '-'
-              td= book.category ? book.category.name : '-'
-              td= book.stock
-              td
-                a.btn.btn-sm.btn-warning(href=`/books/${book.id}/edit`) Edit
-                form.d-inline(method="post", action=`/books/${book.id}/delete`, onsubmit="return confirm('Yakin hapus buku ini?')")
-                  button.btn.btn-sm.btn-danger.ms-1(type="submit") Hapus
+              th(style="width:40px") No
+              th Judul
+              th Penulis
+              th Tahun
+              th Kategori
+              th Stok
+              th(style="width:150px") Aksi
+          tbody
+            each book, i in books
+              tr
+                td= i + 1
+                td= book.title
+                td= book.author
+                td= book.year || '-'
+                td= book.category ? book.category.name : '-'
+                td= book.stock
+                td
+                  a.btn.btn-sm.btn-warning(href=`/books/${book.id}/edit`)
+                    i.fas.fa-edit
+                  form.d-inline(method="post", action=`/books/${book.id}/delete`, onsubmit="return confirm('Yakin hapus buku ini?')")
+                    button.btn.btn-sm.btn-danger.ml-1(type="submit")
+                      i.fas.fa-trash

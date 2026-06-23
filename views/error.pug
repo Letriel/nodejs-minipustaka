@@ -1,7 +1,8 @@
-extends layouts/master
+extends layouts/auth
 
 block web-content
-  .text-center.py-5
-    h1.display-4 Terjadi Kesalahan
-    p.lead= message || 'Maaf, terjadi kesalahan pada server.'
-    a.btn.btn-primary(href="/") Kembali ke Dashboard
+  .card
+    .card-body.text-center.py-4
+      h1.display-5.text-danger.mb-2 Terjadi Kesalahan
+      p.lead= message || 'Maaf, terjadi kesalahan pada server.'
+      a.btn.btn-primary.btn-block(href="/") Kembali ke Beranda

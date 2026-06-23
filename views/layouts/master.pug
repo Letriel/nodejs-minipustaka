@@ -3,35 +3,86 @@ html(lang="id")
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    title MiniPustaka - #{title}
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css")
+    title MiniPustaka | #{title}
+    //- Font Awesome (ikon) + AdminLTE (sudah memuat Bootstrap 4 di dalamnya)
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css")
     link(rel="stylesheet", href="/css/style.css")
     block web-css
-  body
-    nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-      .container
-        a.navbar-brand(href="/") MiniPustaka
-        .navbar-nav.me-auto
+  body.hold-transition.sidebar-mini.layout-fixed
+    .wrapper
+      //- ===== NAVBAR ATAS =====
+      nav.main-header.navbar.navbar-expand.navbar-white.navbar-light
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link(data-widget="pushmenu", href="#", role="button")
+              i.fas.fa-bars
+          li.nav-item.d-none.d-sm-inline-block
+            a.nav-link(href="/") Beranda
+        ul.navbar-nav.ml-auto
           if currentUser
-            a.nav-link(href="/") Dashboard
-            a.nav-link(href="/books") Buku
-        .navbar-nav
+            li.nav-item
+              span.nav-link Halo, #{currentUser.name}
+            li.nav-item
+              form.form-inline(method="post", action="/logout")
+                button.btn.btn-sm.btn-outline-danger(type="submit")
+                  i.fas.fa-sign-out-alt.mr-1
+                  | Logout
+
+      //- ===== SIDEBAR KIRI =====
+      aside.main-sidebar.sidebar-dark-primary.elevation-4
+        a.brand-link(href="/")
+          i.fas.fa-book.ml-3.mr-2(style="opacity:.85")
+          span.brand-text.font-weight-light MiniPustaka
+        .sidebar
           if currentUser
-            span.navbar-text.text-light.me-3 Halo, #{currentUser.name}
-            form.d-inline(method="post", action="/logout")
-              button.btn.btn-sm.btn-outline-light(type="submit") Logout
-          else
-            a.nav-link(href="/login") Login
-            a.nav-link(href="/register") Daftar
+            .user-panel.mt-3.pb-3.mb-3.d-flex
+              .info
+                span.d-block.text-white= currentUser.name
+          nav.mt-2
+            ul.nav.nav-pills.nav-sidebar.flex-column(data-widget="treeview", role="menu")
+              li.nav-item
+                a.nav-link(href="/", class=(currentPath === '/' ? 'active' : ''))
+                  i.nav-icon.fas.fa-tachometer-alt
+                  p Dashboard
+              li.nav-item
+                a.nav-link(href="/books", class=(currentPath && currentPath.indexOf('/books') === 0 ? 'active' : ''))
+                  i.nav-icon.fas.fa-book
+                  p Daftar Buku
 
-    .container.py-4
-      //- Pesan flash sekali tampil
-      if success && success.length
-        .alert.alert-success= success[0]
-      if error && error.length
-        .alert.alert-danger= error[0]
+      //- ===== KONTEN =====
+      .content-wrapper
+        .content-header
+          .container-fluid
+            .row.mb-2
+              .col-sm-6
+                h1.m-0= title
+              .col-sm-6
+                ol.breadcrumb.float-sm-right
+                  li.breadcrumb-item
+                    a(href="/") Beranda
+                  li.breadcrumb-item.active= title
+        section.content
+          .container-fluid
+            //- Pesan flash (bisa ditutup)
+            if success && success.length
+              .alert.alert-success.alert-dismissible
+                button.close(type="button", data-dismiss="alert", aria-hidden="true") &times;
+                = success[0]
+            if error && error.length
+              .alert.alert-danger.alert-dismissible
+                button.close(type="button", data-dismiss="alert", aria-hidden="true") &times;
+                = error[0]
 
-      block web-content
+            block web-content
 
-script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
-block web-js
+      //- ===== FOOTER =====
+      footer.main-footer
+        strong © #{new Date().getFullYear()} MiniPustaka.
+        |  Hak cipta dilindungi.
+
+    //- ===== SCRIPTS ===== (jQuery -> Bootstrap 4 -> AdminLTE)
+    script(src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js")
+    block web-js

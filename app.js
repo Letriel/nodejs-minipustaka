@@ -65,3 +65,11 @@ connectAndSync()
         console.error('Gagal terhubung ke database:', err.message)
         process.exit(1)
     })
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    res.locals.currentUser = req.session.user || null
+    res.locals.currentPath = req.path        // <-- TAMBAHKAN baris ini
+    next()
+})

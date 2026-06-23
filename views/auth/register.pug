@@ -1,34 +1,41 @@
-extends ../layouts/master
+extends ../layouts/auth
 
 block web-content
-  .row.justify-content-center
-    .col-md-6
-      h1.h3.mb-3.text-center Daftar Akun
+  .card
+    .card-body.login-card-body
+      p.login-box-msg Daftar akun baru
 
       if errors && errors.length
         .alert.alert-danger
-          ul.mb-0
+          ul.mb-0.pl-3
             each pesan in errors
               li= pesan
 
-      .card
-        .card-body
-          form(method="post", action="/register")
-            .mb-3
-              label.form-label(for="name") Nama
-              input.form-control#name(type="text", name="name", value=old.name || "", required)
-            .mb-3
-              label.form-label(for="email") Email
-              input.form-control#email(type="email", name="email", value=old.email || "", required)
-            .mb-3
-              label.form-label(for="password") Password
-              input.form-control#password(type="password", name="password", required)
-              .form-text Minimal 8 karakter.
-            .mb-3
-              label.form-label(for="password_confirmation") Konfirmasi Password
-              input.form-control#password_confirmation(type="password", name="password_confirmation", required)
-            .d-grid
-              button.btn.btn-success(type="submit") Daftar
-          p.text-center.mt-3.mb-0
-            | Sudah punya akun? 
-            a(href="/login") Login di sini
+      form(method="post", action="/register")
+        .input-group.mb-3
+          input.form-control(type="text", name="name", placeholder="Nama", value=old.name || "", required)
+          .input-group-append
+            .input-group-text
+              span.fas.fa-user
+        .input-group.mb-3
+          input.form-control(type="email", name="email", placeholder="Email", value=old.email || "", required)
+          .input-group-append
+            .input-group-text
+              span.fas.fa-envelope
+        .input-group.mb-3
+          input.form-control(type="password", name="password", placeholder="Password (min. 8 karakter)", required)
+          .input-group-append
+            .input-group-text
+              span.fas.fa-lock
+        .input-group.mb-3
+          input.form-control(type="password", name="password_confirmation", placeholder="Konfirmasi Password", required)
+          .input-group-append
+            .input-group-text
+              span.fas.fa-lock
+        .row
+          .col-12
+            button.btn.btn-success.btn-block(type="submit") Daftar
+
+      p.mt-3.mb-0.text-center
+        | Sudah punya akun? 
+        a(href="/login") Login di sini
