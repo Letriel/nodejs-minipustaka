@@ -1,0 +1,37 @@
+extends ../layouts/master
+
+block web-content
+  .row.justify-content-center
+    .col-md-8
+      h1.h3.mb-3 Edit Buku
+
+      if errors && errors.length
+        .alert.alert-danger
+          ul.mb-0
+            each pesan in errors
+              li= pesan
+
+      .card
+        .card-body
+          form(method="post", action=`/books/${book.id}/edit`)
+            .mb-3
+              label.form-label(for="title") Judul
+              input.form-control#title(type="text", name="title", value=old.title || "", required)
+            .mb-3
+              label.form-label(for="author") Penulis
+              input.form-control#author(type="text", name="author", value=old.author || "", required)
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="year") Tahun
+                input.form-control#year(type="number", name="year", value=old.year || "")
+              .col-md-6.mb-3
+                label.form-label(for="stock") Stok
+                input.form-control#stock(type="number", name="stock", value=(old.stock !== undefined ? old.stock : 0), required)
+            .mb-3
+              label.form-label(for="category_id") Kategori
+              select.form-select#category_id(name="category_id")
+                option(value="") -- Pilih Kategori --
+                each cat in categories
+                  option(value=cat.id, selected=(String(old.category_id) === String(cat.id)))= cat.name
+            button.btn.btn-success(type="submit") Perbarui
+            a.btn.btn-secondary.ms-1(href="/books") Batal

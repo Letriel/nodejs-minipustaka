@@ -1,0 +1,27 @@
+extends ../layouts/master
+
+block web-content
+  .row.justify-content-center
+    .col-md-5
+      h1.h3.mb-3.text-center Login
+
+      if errors && errors.length
+        .alert.alert-danger
+          ul.mb-0
+            each pesan in errors
+              li= pesan
+
+      .card
+        .card-body
+          form(method="post", action="/login")
+            .mb-3
+              label.form-label(for="email") Email
+              input.form-control#email(type="email", name="email", value=old.email || "", required)
+            .mb-3
+              label.form-label(for="password") Password
+              input.form-control#password(type="password", name="password", required)
+            .d-grid
+              button.btn.btn-primary(type="submit") Masuk
+          p.text-center.mt-3.mb-0
+            | Belum punya akun? 
+            a(href="/register") Daftar di sini
