@@ -1,0 +1,23 @@
+extends ../layouts/master
+
+block web-content
+  .row
+    .col-md-8
+      .card.card-primary
+        .card-header
+          h3.card-title Tambah Kategori
+        form(method="post", action="/categories/create")
+          .card-body
+            if errors && errors.length
+              .alert.alert-danger
+                ul.mb-0.pl-3
+                  each pesan in errors
+                    li= pesan
+            .form-group
+              label(for="name") Nama
+              input.form-control#name(type="text", name="name", value=old.name || "", required)
+          .card-footer
+            button.btn.btn-success(type="submit")
+              i.fas.fa-save.mr-1
+              | Simpan
+            a.btn.btn-default.ml-1(href="/categories") Batal

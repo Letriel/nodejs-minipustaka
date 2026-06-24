@@ -1,0 +1,32 @@
+extends ../layouts/master
+
+block web-content
+  .card
+    .card-header
+      h3.card-title Daftar Kategori
+      .card-tools
+        a.btn.btn-primary.btn-sm(href="/categories/create")
+          i.fas.fa-plus.mr-1
+          | Tambah Kategori
+    .card-body.p-0
+      if categories.length === 0
+        .p-3
+          .alert.alert-info.mb-0 Belum ada data kategori. Silakan tambah kategori baru.
+      else
+        table.table.table-striped.table-hover.mb-0
+          thead
+            tr
+              th(style="width:40px") No
+              th Nama
+              th(style="width:150px") Aksi
+          tbody
+            each cat, i in categories
+              tr
+                td= i + 1
+                td= cat.name
+                td
+                  a.btn.btn-sm.btn-warning(href=`/categories/${cat.id}/edit`)
+                    i.fas.fa-edit
+                  form.d-inline(method="post", action=`/categories/${cat.id}/delete`, onsubmit="return confirm('Yakin hapus kategori ini?')")
+                    button.btn.btn-sm.btn-danger.ml-1(type="submit")
+                      i.fas.fa-trash
