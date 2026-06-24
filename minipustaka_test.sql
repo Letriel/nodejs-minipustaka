@@ -29,18 +29,36 @@ CREATE DATABASE minipustaka_test
 USE minipustaka_test;
 
 -- ---------------------------------------------------------------------
+--  Tabel: roles  (peran pengguna: admin / user)
+-- ---------------------------------------------------------------------
+CREATE TABLE roles (
+  id         INT         NOT NULL AUTO_INCREMENT,
+  name       VARCHAR(50) NOT NULL,
+  created_at DATETIME    NOT NULL,
+  updated_at DATETIME    NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_roles_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
 --  Tabel: users  (untuk autentikasi)
 --  Catatan: kolom password menyimpan HASH bcrypt (±60 karakter).
+--  role_id -> roles(id); jika role dihapus -> di-SET NULL.
 -- ---------------------------------------------------------------------
 CREATE TABLE users (
   id         INT          NOT NULL AUTO_INCREMENT,
   name       VARCHAR(100) NOT NULL,
   email      VARCHAR(100) NOT NULL,
   password   VARCHAR(100) NOT NULL,
+  role_id    INT          DEFAULT NULL,
   created_at DATETIME     NOT NULL,
   updated_at DATETIME     NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_users_email (email)
+  UNIQUE KEY uq_users_email (email),
+  KEY idx_users_role (role_id),
+  CONSTRAINT fk_users_role
+    FOREIGN KEY (role_id) REFERENCES roles (id)
+    ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------
@@ -79,14 +97,20 @@ CREATE TABLE books (
 -- =====================================================================
 --  Timestamp sengaja dibuat tetap agar hasil tes konsisten.
 
+-- Roles -------------------------------------------------------------
+INSERT INTO roles (id, name, created_at, updated_at) VALUES
+  (1, 'admin', '2024-01-01 08:00:00', '2024-01-01 08:00:00'),
+  (2, 'user',  '2024-01-01 08:00:00', '2024-01-01 08:00:00');
+
 -- Users -------------------------------------------------------------
-INSERT INTO users (id, name, email, password, created_at, updated_at) VALUES
+--  Administrator -> role admin (1); Pengguna Biasa -> role user (2).
+INSERT INTO users (id, name, email, password, role_id, created_at, updated_at) VALUES
   (1, 'Administrator',  'admin@minipustaka.com',
       '$2b$10$3hTM8G13AOzrNjVg43rYOuFWbsCPjEsxEcP/QO4.lfT.xU2eXj97G',
-      '2024-01-01 08:00:00', '2024-01-01 08:00:00'),
+      1, '2024-01-01 08:00:00', '2024-01-01 08:00:00'),
   (2, 'Pengguna Biasa', 'user@minipustaka.com',
       '$2b$10$esW0Nqpus.5MVHqleJJJ5.tCunrnpnp6H.l2tMI0Kej5Ilh5yyftu',
-      '2024-01-01 08:00:00', '2024-01-01 08:00:00');
+      2, '2024-01-01 08:00:00', '2024-01-01 08:00:00');
 
 -- Categories --------------------------------------------------------
 --  "Sains" sengaja dibiarkan TANPA buku untuk menguji relasi kosong.
@@ -138,5 +162,6 @@ INSERT INTO books (id, title, author, year, stock, category_id, created_at, upda
 --  TRUNCATE TABLE books;
 --  TRUNCATE TABLE categories;
 --  TRUNCATE TABLE users;
+--  TRUNCATE TABLE roles;
 --  SET FOREIGN_KEY_CHECKS = 1;
---  -- lalu jalankan kembali ketiga blok INSERT di atas.
+--  -- lalu jalankan kembali keempat blok INSERT di atas.
