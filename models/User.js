@@ -20,6 +20,10 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING(100), // hash bcrypt panjangnya ±60 karakter
         allowNull: false
+    },
+    role_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true // diisi lewat seeder; login mem-fallback ke 'user' bila kosong
     }
 }, {
     tableName: 'users',

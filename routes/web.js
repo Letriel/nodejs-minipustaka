@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const BookController = require('../controllers/BookController')
 const CategoryController = require('../controllers/CategoryController')
-const { requireAuth } = require('../middlewares/auth')
+const { requireAuth, requireAdmin } = require('../middlewares/auth')
 const { Book, Category } = require('../models')
 
 // Semua rute di bawah ini wajib login.
@@ -22,20 +22,20 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// CRUD Buku
+// CRUD Buku — tambah & hapus untuk semua user login; edit khusus admin.
 router.get('/books', BookController.index)
 router.get('/books/create', BookController.create)
 router.post('/books/create', BookController.store)
-router.get('/books/:id/edit', BookController.edit)
-router.post('/books/:id/edit', BookController.update)
+router.get('/books/:id/edit', requireAdmin, BookController.edit)
+router.post('/books/:id/edit', requireAdmin, BookController.update)
 router.post('/books/:id/delete', BookController.destroy)
 
-// CRUD Kategori
-router.get('/categories', CategoryController.index)
-router.get('/categories/create', CategoryController.create)
-router.post('/categories/create', CategoryController.store)
-router.get('/categories/:id/edit', CategoryController.edit)
-router.post('/categories/:id/edit', CategoryController.update)
-router.post('/categories/:id/delete', CategoryController.destroy)
+// CRUD Kategori — khusus admin.
+router.get('/categories', requireAdmin, CategoryController.index)
+router.get('/categories/create', requireAdmin, CategoryController.create)
+router.post('/categories/create', requireAdmin, CategoryController.store)
+router.get('/categories/:id/edit', requireAdmin, CategoryController.edit)
+router.post('/categories/:id/edit', requireAdmin, CategoryController.update)
+router.post('/categories/:id/delete', requireAdmin, CategoryController.destroy)
 
 module.exports = router

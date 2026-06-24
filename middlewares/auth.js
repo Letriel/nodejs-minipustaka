@@ -17,4 +17,13 @@ function redirectIfAuth(req, res, next) {
     return next()
 }
 
-module.exports = { requireAuth, redirectIfAuth }
+// Halaman/aksi khusus admin. Jika bukan admin -> tolak dan kembalikan ke daftar buku.
+function requireAdmin(req, res, next) {
+    if (req.session && req.session.user && req.session.user.role === 'admin') {
+        return next()
+    }
+    req.flash('error', 'Akses ditolak. Hanya admin yang dapat melakukan aksi ini.')
+    return res.redirect('/books')
+}
+
+module.exports = { requireAuth, redirectIfAuth, requireAdmin }

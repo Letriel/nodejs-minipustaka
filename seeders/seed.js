@@ -1,17 +1,31 @@
 require('dotenv').config()
 const bcrypt = require('bcryptjs')
-const { sequelize, User, Category, Book, connectAndSync } = require('../models')
+const { sequelize, Role, User, Category, Book, connectAndSync } = require('../models')
 
-// Mengisi data awal: 1 user admin, beberapa kategori, dan contoh buku.
+// Mengisi data awal: role, user admin & user biasa, beberapa kategori, dan contoh buku.
 // findOrCreate dipakai agar aman dijalankan berulang (tidak menggandakan data).
 async function seed() {
   await connectAndSync()
+
+  // Role
+  const [adminRole] = await Role.findOrCreate({ where: { name: 'admin' } })
+  const [userRole] = await Role.findOrCreate({ where: { name: 'user' } })
 
   await User.findOrCreate({
     where: { email: 'admin@minipustaka.com' },
     defaults: {
       name: 'Administrator',
-      password: await bcrypt.hash('admin12345', 10)
+      password: await bcrypt.hash('admin12345', 10),
+      role_id: adminRole.id
+    }
+  })
+
+  await User.findOrCreate({
+    where: { email: 'user@minipustaka.com' },
+    defaults: {
+      name: 'User Biasa',
+      password: await bcrypt.hash('user12345', 10),
+      role_id: userRole.id
     }
   })
 
@@ -29,6 +43,7 @@ async function seed() {
 
   console.log('✓ Seed selesai.')
   console.log('  Login admin: admin@minipustaka.com / admin12345')
+  console.log('  Login user : user@minipustaka.com / user12345')
   await sequelize.close()
 }
 

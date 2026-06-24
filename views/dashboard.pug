@@ -19,9 +19,10 @@ block web-content
           p Total Kategori
         .icon
           i.fas.fa-tags
-        a.small-box-footer(href="/categories")
-          | Kelola Kategori
-          i.fas.fa-arrow-circle-right
+        if currentUser && currentUser.role === 'admin'
+          a.small-box-footer(href="/categories")
+            | Kelola Kategori
+            i.fas.fa-arrow-circle-right
 
   .card
     .card-header

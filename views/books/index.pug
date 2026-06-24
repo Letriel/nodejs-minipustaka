@@ -33,8 +33,9 @@ block web-content
                 td= book.category ? book.category.name : '-'
                 td= book.stock
                 td
-                  a.btn.btn-sm.btn-warning(href=`/books/${book.id}/edit`)
-                    i.fas.fa-edit
+                  if currentUser && currentUser.role === 'admin'
+                    a.btn.btn-sm.btn-warning(href=`/books/${book.id}/edit`)
+                      i.fas.fa-edit
                   form.d-inline(method="post", action=`/books/${book.id}/delete`, onsubmit="return confirm('Yakin hapus buku ini?')")
                     button.btn.btn-sm.btn-danger.ml-1(type="submit")
                       i.fas.fa-trash

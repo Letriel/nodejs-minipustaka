@@ -49,10 +49,11 @@ html(lang="id")
                 a.nav-link(href="/books", class=(currentPath && currentPath.indexOf('/books') === 0 ? 'active' : ''))
                   i.nav-icon.fas.fa-book
                   p Daftar Buku
-              li.nav-item
-                a.nav-link(href="/categories", class=(currentPath && currentPath.indexOf('/categories') === 0 ? 'active' : ''))
-                  i.nav-icon.fas.fa-tags
-                  p Kategori
+              if currentUser && currentUser.role === 'admin'
+                li.nav-item
+                  a.nav-link(href="/categories", class=(currentPath && currentPath.indexOf('/categories') === 0 ? 'active' : ''))
+                    i.nav-icon.fas.fa-tags
+                    p Kategori
 
       //- ===== KONTEN =====
       .content-wrapper

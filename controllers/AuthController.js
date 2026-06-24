@@ -1,48 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { User } = require('../models')
-const { registerSchema, loginSchema } = require('../validations/authValidation')
-
-// GET /register
-exports.showRegister = (req, res) => {
-    res.render('auth/register', { title: 'Daftar', errors: [], old: {} })
-}
-
-// POST /register
-exports.register = async (req, res, next) => {
-    try {
-        // 1) Validasi input dengan Joi
-        const { error, value } = registerSchema.validate(req.body, {
-            abortEarly: false,
-            stripUnknown: true
-        })
-        if (error) {
-            return res.status(422).render('auth/register', {
-                title: 'Daftar',
-                errors: error.details.map(d => d.message),
-                old: req.body
-            })
-        }
-
-        // 2) Pastikan email belum dipakai
-        const existing = await User.findOne({ where: { email: value.email } })
-        if (existing) {
-            return res.status(422).render('auth/register', {
-                title: 'Daftar',
-                errors: ['Email sudah terdaftar'],
-                old: req.body
-            })
-        }
-
-        // 3) Hash password lalu simpan
-        const hashed = await bcrypt.hash(value.password, 10)
-        await User.create({ name: value.name, email: value.email, password: hashed })
-
-        req.flash('success', 'Pendaftaran berhasil. Silakan login.')
-        res.redirect('/login')
-    } catch (err) {
-        next(err)
-    }
-}
+const { User, Role } = require('../models')
+const { loginSchema } = require('../validations/authValidation')
 
 // GET /login
 exports.showLogin = (req, res) => {
@@ -64,7 +22,10 @@ exports.login = async (req, res, next) => {
             })
         }
 
-        const user = await User.findOne({ where: { email: value.email } })
+        const user = await User.findOne({
+            where: { email: value.email },
+            include: [{ model: Role, as: 'role' }]
+        })
         // Pesan sengaja dibuat umum demi keamanan (tidak membocorkan email mana yang terdaftar).
         const pesanGagal = 'Email atau password salah'
         if (!user || !(await bcrypt.compare(value.password, user.password))) {
@@ -74,8 +35,9 @@ exports.login = async (req, res, next) => {
         }
 
         // Simpan identitas di session (JANGAN simpan password).
+        const role = user.role ? user.role.name : 'user'
         req.session.userId = user.id
-        req.session.user = { id: user.id, name: user.name, email: user.email }
+        req.session.user = { id: user.id, name: user.name, email: user.email, role }
 
         req.flash('success', `Selamat datang, ${user.name}!`)
         res.redirect('/')

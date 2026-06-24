@@ -1,4 +1,5 @@
 const sequelize = require('../config/database')
+const Role = require('./Role')
 const User = require('./User')
 const Category = require('./Category')
 const Book = require('./Book')
@@ -8,6 +9,10 @@ const Book = require('./Book')
 Category.hasMany(Book, { foreignKey: 'category_id', as: 'books' })
 Book.belongsTo(Category, { foreignKey: 'category_id', as: 'category' })
 
+// Satu Role memiliki banyak User; setiap User milik satu Role.
+Role.hasMany(User, { foreignKey: 'role_id', as: 'users' })
+User.belongsTo(Role, { foreignKey: 'role_id', as: 'role' })
+
 // Menghubungkan ke database lalu membuat/menyesuaikan tabel sesuai model.
 async function connectAndSync() {
     await sequelize.authenticate()
@@ -16,4 +21,4 @@ async function connectAndSync() {
     console.log('✓ Model tersinkronisasi dengan database')
 }
 
-module.exports = { sequelize, User, Category, Book, connectAndSync }
+module.exports = { sequelize, Role, User, Category, Book, connectAndSync }
